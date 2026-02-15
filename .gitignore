@@ -1,0 +1,6 @@
+.DS_Store
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+capstone_projects/hORM_db/repo/
+dcs109/hw0_template/

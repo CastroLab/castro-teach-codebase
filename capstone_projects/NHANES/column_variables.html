@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>NHANES 2013-2014: Column Variables</title>
+  <style>
+    body{font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+         max-width: 960px; margin: 0 auto; padding: 2em; line-height: 1.6; color: #222;}
+    h1{border-bottom: 2px solid #333; padding-bottom: 0.3em;}
+    h2{border-bottom: 1px solid #ccc; padding-bottom: 0.2em; margin-top: 2em; color: #1a5276;}
+    h3{color: #2c3e50; margin-top: 1.5em;}
+    table{border-collapse: collapse; width: 100%; margin: 1em 0;}
+    th, td{border: 1px solid #ddd; padding: 8px 12px; text-align: left; vertical-align: top;}
+    th{background-color: #f4f6f7; font-weight: 600;}
+    tr:nth-child(even){background-color: #fafafa;}
+    tr:hover{background-color: #f0f4f8;}
+    td:first-child{font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.9em;
+                   white-space: nowrap; color: #c0392b;}
+    a{color: #2471a3; text-decoration: none;}
+    a:hover{text-decoration: underline;}
+    code{background: #f4f4f4; padding: 2px 5px; border-radius: 3px; font-size: 0.9em;}
+    hr{border: none; border-top: 1px solid #ddd; margin: 2em 0;}
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">NHANES 2013-2014: Column Variables</h1>
+</header>
+<h1 id="nhanes-2013-2014-olfactory-cognitive-dataset-column-variables">NHANES 2013-2014: Olfactory + Cognitive Dataset Column Variables</h1>
+<p>Source files: <code>nhanes_2013_2014_smell_cognition_60plus.csv</code> (1,785 participants aged 60-80) and <code>nhanes_2013_2014_smell_all_40plus.csv</code> (3,708 participants aged 40+, smell + demographics only).</p>
+<p>All original variables documented at the NHANES 2013-2014 data pages: - Taste &amp; Smell Exam: <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a> - Cognitive Functioning: <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CFQ_H.htm">CFQ_H</a> - Demographics: <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/DEMO_H.htm">DEMO_H</a></p>
+<hr />
+<h2 id="participant-identifier">Participant Identifier</h2>
+<table>
+<colgroup>
+<col style="width: 43%" />
+<col style="width: 56%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>SEQN</code></td>
+<td>Respondent sequence number. Unique integer identifier assigned to each NHANES participant within a survey cycle. Used as the merge key across all NHANES data files (demographics, examination, laboratory, questionnaire). Not comparable across cycles. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/DEMO_H.htm">DEMO_H codebook</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="olfactory-assessment-8-item-pocket-smell-test">Olfactory Assessment: 8-Item Pocket Smell Test</h2>
+<p>Participants aged 40+ were administered the <a href="https://pubmed.ncbi.nlm.nih.gov/37410621/">Sensonics Pocket Smell Test</a>, an 8-item scratch-and-sniff forced-choice odor identification test. Each item presents a microencapsulated odorant; the participant scratches, sniffs, and selects from 4 labeled choices. Items are presented in fixed order. Four odors are food-related (chocolate, strawberry, grape, onion) and four are non-food (smoke, leather, soap, natural gas). Full codebook: <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a>.</p>
+<h3 id="raw-responses-1-4-forced-choice">Raw Responses (1-4 forced choice)</h3>
+<table>
+<colgroup>
+<col style="width: 43%" />
+<col style="width: 56%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>CSXCHOOD</code></td>
+<td>Chocolate scent identification. Forced-choice response: 1=Lemon, <strong>2=Chocolate (correct)</strong>, 3=Smoke, 4=Black pepper. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+<tr class="even">
+<td><code>CSXSBOD</code></td>
+<td>Strawberry scent identification. Forced-choice response: <strong>1=Strawberry (correct)</strong>, 2=Garlic, 3=Leather, 4=Gasoline. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+<tr class="odd">
+<td><code>CSXSMKOD</code></td>
+<td>Smoke scent identification. Forced-choice response: 1=Garlic, 2=Grass, <strong>3=Smoke (correct)</strong>, 4=Peach. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+<tr class="even">
+<td><code>CSXLEAOD</code></td>
+<td>Leather scent identification. Forced-choice response: 1=Mint, 2=Flower, <strong>3=Leather (correct)</strong>, 4=Apple. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+<tr class="odd">
+<td><code>CSXSOAOD</code></td>
+<td>Soap scent identification. Forced-choice response: <strong>1=Soap (correct)</strong>, 2=Black pepper, 3=Leather, 4=Peanut. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+<tr class="even">
+<td><code>CSXGRAOD</code></td>
+<td>Grape scent identification. Forced-choice response: 1=Gasoline, <strong>2=Grape (correct)</strong>, 3=Rose, 4=Peanut. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+<tr class="odd">
+<td><code>CSXONOD</code></td>
+<td>Onion scent identification. Forced-choice response: 1=Chocolate, 2=Strawberry, <strong>3=Onion (correct)</strong>, 4=Fruit punch. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+<tr class="even">
+<td><code>CSXNGSOD</code></td>
+<td>Natural gas scent identification. Forced-choice response: 1=Orange, 2=Cinnamon, 3=Cola, <strong>4=Natural gas (correct)</strong>. Included as a safety-relevant odor. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="derived-smell-scores-computed-by-download_and_merge.py">Derived Smell Scores (computed by <code>download_and_merge.py</code>)</h3>
+<table>
+<colgroup>
+<col style="width: 43%" />
+<col style="width: 56%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>CSXCHOOD_correct</code></td>
+<td>Binary: 1 if participant correctly identified chocolate (response=2), 0 otherwise. NaN if item not administered. Derived from <code>CSXCHOOD</code>.</td>
+</tr>
+<tr class="even">
+<td><code>CSXSBOD_correct</code></td>
+<td>Binary: 1 if participant correctly identified strawberry (response=1), 0 otherwise. Derived from <code>CSXSBOD</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>CSXSMKOD_correct</code></td>
+<td>Binary: 1 if participant correctly identified smoke (response=3), 0 otherwise. Derived from <code>CSXSMKOD</code>.</td>
+</tr>
+<tr class="even">
+<td><code>CSXLEAOD_correct</code></td>
+<td>Binary: 1 if participant correctly identified leather (response=3), 0 otherwise. Derived from <code>CSXLEAOD</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>CSXSOAOD_correct</code></td>
+<td>Binary: 1 if participant correctly identified soap (response=1), 0 otherwise. Derived from <code>CSXSOAOD</code>.</td>
+</tr>
+<tr class="even">
+<td><code>CSXGRAOD_correct</code></td>
+<td>Binary: 1 if participant correctly identified grape (response=2), 0 otherwise. Derived from <code>CSXGRAOD</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>CSXONOD_correct</code></td>
+<td>Binary: 1 if participant correctly identified onion (response=3), 0 otherwise. Derived from <code>CSXONOD</code>.</td>
+</tr>
+<tr class="even">
+<td><code>CSXNGSOD_correct</code></td>
+<td>Binary: 1 if participant correctly identified natural gas (response=4), 0 otherwise. Derived from <code>CSXNGSOD</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>smell_total</code></td>
+<td>Total number of odors correctly identified (0-8). Sum of the 8 <code>_correct</code> binary variables. NaN if all items missing. Mean=6.27, SD=1.63 in the 60+ sample.</td>
+</tr>
+<tr class="even">
+<td><code>olfactory_status</code></td>
+<td>Categorical classification based on <code>smell_total</code>: “Anosmia (0-3)” = severe dysfunction, “Hyposmia (4-5)” = moderate dysfunction, “Normosmia (6-8)” = normal. Cutoffs follow conventions in <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5033684/">Rawal et al. 2016</a>.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="olfactory-assessment-taste-testing">Olfactory Assessment: Taste Testing</h2>
+<p>Taste function was assessed using quinine (bitter) and NaCl (salt) solutions applied to the tongue tip and sampled with the whole mouth. The general Labeled Magnitude Scale (gLMS) was used to rate perceived intensity (0-100). Approximately half of participants received repeat whole-mouth NaCl tests for reliability. Full codebook: <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a>.</p>
+<h3 id="tongue-tip-tests">Tongue Tip Tests</h3>
+<table>
+<colgroup>
+<col style="width: 43%" />
+<col style="width: 56%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>CSXQUIPG</code></td>
+<td>Tongue tip quinine (1 mM) perceived intensity on gLMS (0-100 continuous). The gLMS is a psychophysical scale ranging from “no sensation” (0) to “strongest imaginable sensation of any kind” (100). Solution painted directly on tongue tip. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+<tr class="even">
+<td><code>CSXQUIPT</code></td>
+<td>Tongue tip quinine taste identification. What the participant reported tasting: 1=Salty, 2=Bitter (expected), 3=Something else, 4=No taste, 5=Sour. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+<tr class="odd">
+<td><code>CSXNAPG</code></td>
+<td>Tongue tip NaCl (1 M) perceived intensity on gLMS (0-100 continuous). High-concentration salt solution painted on tongue tip to test regional taste function. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+<tr class="even">
+<td><code>CSXNAPT</code></td>
+<td>Tongue tip NaCl taste identification: 1=Salty (expected), 2=Bitter, 3=Something else, 4=No taste, 5=Sour. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="whole-mouth-tests">Whole Mouth Tests</h3>
+<table>
+<colgroup>
+<col style="width: 43%" />
+<col style="width: 56%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>CSXQUISG</code></td>
+<td>Whole mouth quinine (1 mM) intensity on gLMS (0-100). Participant sips and swishes the solution. Tests whole-mouth bitter perception. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+<tr class="even">
+<td><code>CSXQUIST</code></td>
+<td>Whole mouth quinine taste identification: 1=Salty, 2=Bitter (expected), 3=Something else, 4=No taste, 5=Sour. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+<tr class="odd">
+<td><code>CSXSLTSG</code></td>
+<td>Whole mouth NaCl (1 M) intensity on gLMS (0-100). High-concentration salt, tests salty taste perception. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+<tr class="even">
+<td><code>CSXSLTST</code></td>
+<td>Whole mouth NaCl (1 M) taste identification: 1=Salty (expected), 2=Bitter, 3=Something else, 4=No taste, 5=Sour. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+<tr class="odd">
+<td><code>CSXNASG</code></td>
+<td>Whole mouth NaCl (0.32 M) intensity on gLMS (0-100). Lower-concentration salt; used alongside 1 M to assess salt sensitivity across concentrations. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+<tr class="even">
+<td><code>CSXNAST</code></td>
+<td>Whole mouth NaCl (0.32 M) taste identification: 1=Salty (expected), 2=Bitter, 3=Something else, 4=No taste, 5=Sour. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+<tr class="odd">
+<td><code>CSXTSEQ</code></td>
+<td>Whole mouth taste test administration sequence. A = “1M NaCl, 1mM quinine, 0.32M NaCl”; B = “0.32M NaCl, 1mM quinine, 1M NaCl”. Counterbalanced across participants. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="whole-mouth-repeat-tests-reliability-subsample">Whole Mouth Repeat Tests (reliability subsample)</h3>
+<table>
+<colgroup>
+<col style="width: 43%" />
+<col style="width: 56%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>CSXSLTRT</code></td>
+<td>Repeat whole mouth NaCl (1 M) intensity on gLMS (0-100). Administered to ~half of participants for test-retest reliability assessment. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+<tr class="even">
+<td><code>CSXSLTRG</code></td>
+<td>Repeat NaCl (1 M) taste identification: 1=Salty, 2=Bitter, 3=Something else, 4=No taste, 5=Sour. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+<tr class="odd">
+<td><code>CSXNART</code></td>
+<td>Repeat whole mouth NaCl (0.32 M) intensity on gLMS (0-100). Reliability replicate for the lower-concentration salt test. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+<tr class="even">
+<td><code>CSXNARG</code></td>
+<td>Repeat NaCl (0.32 M) taste identification: 1=Salty, 2=Bitter, 3=Something else, 4=No taste, 5=Sour. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="olfactory-assessment-exam-status-and-screening">Olfactory Assessment: Exam Status and Screening</h2>
+<table>
+<colgroup>
+<col style="width: 43%" />
+<col style="width: 56%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>CSXEXSTS</code></td>
+<td>Overall taste &amp; smell exam completion status: 1=Complete, 2=Partial, 3=Not done. Participants with status 2 may have smell data but incomplete taste data or vice versa. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+<tr class="even">
+<td><code>CSXEXCMT</code></td>
+<td>Exam status comment code explaining why exam was partial or not done. Codes include: 1=Safety exclusion, 2=Refused, 3=No time, 4=Physical limitation, 5=Communication problem, 6=Equipment problem, 7=SP ill/emergency, 51=Unable to comply, 56=Came late/left early, 122=Language barrier, and others. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+<tr class="odd">
+<td><code>CSQ245</code></td>
+<td>Pre-screening: “Have you ever had a skin rash or allergy caused by quinine?” 1=Yes, 2=No, 7=Refused, 9=Don’t know. Participants answering “Yes” were excluded from quinine taste tests. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+<tr class="even">
+<td><code>CSQ241</code></td>
+<td>Pre-screening: “Are you currently pregnant or breast feeding?” 1=Yes, 2=No. Asked of females 40-59 only. Pregnant/breastfeeding women were excluded from quinine taste tests. All values NaN in the 60+ dataset. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+<tr class="odd">
+<td><code>CSQ260A</code></td>
+<td>Current nasal symptom: “Sneeze frequently?” 1=Checked (symptom present). Part of a check-all-that-apply battery on current nasal problems administered before the smell test. NaN if not checked. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+<tr class="even">
+<td><code>CSQ260D</code></td>
+<td>Current nasal symptom: “Green, yellow, or brown mucus discharge?” 1=Checked. NaN if not checked. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+<tr class="odd">
+<td><code>CSQ260G</code></td>
+<td>Current nasal symptom: “Completely blocked up nose?” 1=Checked. NaN if not checked. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+<tr class="even">
+<td><code>CSQ260I</code></td>
+<td>Current nasal symptom: “Sinus pain?” 1=Checked. NaN if not checked. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+<tr class="odd">
+<td><code>CSQ260N</code></td>
+<td>Current nasal symptom: “Runny nose?” 1=Checked. NaN if not checked. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+<tr class="even">
+<td><code>CSQ260M</code></td>
+<td>Current nasal symptom: “None of the above.” 1=Checked, indicating no current nasal symptoms. NaN if not checked. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+<tr class="odd">
+<td><code>CSQ270</code></td>
+<td>Type of nasal blockage: “Was your nose blocked on both sides, or just one side?” 1=Both sides, 2=One side, 9=Don’t know. Only asked if <code>CSQ260G</code> was checked. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+<tr class="even">
+<td><code>CSAEFFRT</code></td>
+<td>Technician’s rating of participant’s understanding and cooperation with exam procedures: 1=Very good, 2=Good, 3=Fair, 4=Poor, 5=Unable to cooperate. Useful as a data quality indicator. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="olfactory-assessment-light-sensitivity-glms-calibration">Olfactory Assessment: Light Sensitivity (gLMS Calibration)</h2>
+<p>These variables are gLMS intensity ratings for light stimuli of known luminance, used to calibrate each participant’s use of the general Labeled Magnitude Scale before taste testing. Ratings range 0-100. Full codebook: <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a>.</p>
+<table>
+<colgroup>
+<col style="width: 43%" />
+<col style="width: 56%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>CSQ450</code></td>
+<td>gLMS rating for low intermediate light at 85 candelas/m². First practice light used to familiarize participants with the rating scale before taste intensity testing. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+<tr class="even">
+<td><code>CSQ460</code></td>
+<td>gLMS rating for high intermediate light at 439 candelas/m². Second practice light. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+<tr class="odd">
+<td><code>CSQ470</code></td>
+<td>gLMS rating for medium test light at 193 candelas/m². First of three test lights used to assess gLMS reliability and individual scale usage. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+<tr class="even">
+<td><code>CSQ480</code></td>
+<td>gLMS rating for low test light at 4.3 candelas/m². Lowest-intensity test stimulus. Should produce the lowest gLMS rating among the three test lights. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+<tr class="odd">
+<td><code>CSQ490</code></td>
+<td>gLMS rating for high test light at 1000 candelas/m². Highest-intensity test stimulus. Should produce the highest gLMS rating. Ordering of light ratings can be used to validate gLMS comprehension. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CSX_H.htm">CSX_H</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="cognitive-functioning-cerad-word-learning-test">Cognitive Functioning: CERAD Word Learning Test</h2>
+<p>The Consortium to Establish a Registry for Alzheimer’s Disease (CERAD) Word Learning subtest assesses immediate and delayed verbal memory. Participants are shown 10 unrelated words one at a time and asked to read each aloud. Immediately after, they recall as many words as possible. This is repeated for 3 learning trials. After a delay filled by other cognitive tests (~10 min), a delayed recall trial is administered. Administered to ages 60+ in English, Spanish, or Asian languages. Full codebook: <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CFQ_H.htm">CFQ_H</a>. Background: <a href="https://www.cdc.gov/healthy-aging-data/nhanes/index.html">CDC Cognitive Assessments</a>.</p>
+<h3 id="cerad-scores">CERAD Scores</h3>
+<table>
+<colgroup>
+<col style="width: 43%" />
+<col style="width: 56%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>CFDCST1</code></td>
+<td>CERAD Trial 1 recall score: number of words correctly recalled after first presentation (0-10). Baseline immediate memory measure. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CFQ_H.htm">CFQ_H</a></td>
+</tr>
+<tr class="even">
+<td><code>CFDCST2</code></td>
+<td>CERAD Trial 2 recall score (0-10). Typically higher than Trial 1 due to learning effect. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CFQ_H.htm">CFQ_H</a></td>
+</tr>
+<tr class="odd">
+<td><code>CFDCST3</code></td>
+<td>CERAD Trial 3 recall score (0-10). Highest of the three trials for most participants, reflecting learning ceiling. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CFQ_H.htm">CFQ_H</a></td>
+</tr>
+<tr class="even">
+<td><code>CFDCSR</code></td>
+<td>CERAD Delayed Recall score (0-10). Words recalled after ~10-minute delay without re-presentation. Measures memory retention/consolidation. Sensitive to early Alzheimer’s-related decline. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CFQ_H.htm">CFQ_H</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="cerad-intrusions">CERAD Intrusions</h3>
+<table>
+<colgroup>
+<col style="width: 43%" />
+<col style="width: 56%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>CFDCIT1</code></td>
+<td>CERAD Trial 1 intrusion word count (0-4). Number of non-list words incorrectly recalled. Elevated intrusions may indicate executive dysfunction or false memory. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CFQ_H.htm">CFQ_H</a></td>
+</tr>
+<tr class="even">
+<td><code>CFDCIT2</code></td>
+<td>CERAD Trial 2 intrusion word count (0-5). <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CFQ_H.htm">CFQ_H</a></td>
+</tr>
+<tr class="odd">
+<td><code>CFDCIT3</code></td>
+<td>CERAD Trial 3 intrusion word count (0-6). <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CFQ_H.htm">CFQ_H</a></td>
+</tr>
+<tr class="even">
+<td><code>CFDCIR</code></td>
+<td>CERAD Delayed Recall intrusion word count (0-8). Intrusions during delay tend to be more clinically significant than during learning trials. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CFQ_H.htm">CFQ_H</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="cerad-derived-scores-computed-by-download_and_merge.py">CERAD Derived Scores (computed by <code>download_and_merge.py</code>)</h3>
+<table>
+<colgroup>
+<col style="width: 43%" />
+<col style="width: 56%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>cerad_total_learning</code></td>
+<td>Sum of Trials 1-3 recall scores (0-30). Composite measure of immediate verbal learning ability. <code>CFDCST1 + CFDCST2 + CFDCST3</code>. NaN if any trial is missing. Mean=19.3, SD=4.9 in the 60+ sample.</td>
+</tr>
+<tr class="even">
+<td><code>cerad_total_intrusions</code></td>
+<td>Sum of all intrusion counts across 3 learning trials + delayed recall (0-23 theoretical max). <code>CFDCIT1 + CFDCIT2 + CFDCIT3 + CFDCIR</code>. NaN if any trial is missing.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="cerad-status">CERAD Status</h3>
+<table>
+<colgroup>
+<col style="width: 43%" />
+<col style="width: 56%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>CFDCCS</code></td>
+<td>CERAD completion status: 1=Four completed recalls (3 learning + 1 delayed), 2=One to three completed recalls, 3=Not done. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CFQ_H.htm">CFQ_H</a></td>
+</tr>
+<tr class="even">
+<td><code>CFDCRNC</code></td>
+<td>CERAD reason not completed: 2=Communication problem, 3=Physical limitation, 4=Quit or gave up, 6=Equipment failure. NaN if CERAD was completed. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CFQ_H.htm">CFQ_H</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="cognitive-functioning-animal-fluency-test">Cognitive Functioning: Animal Fluency Test</h2>
+<p>The Animal Fluency test measures categorical verbal fluency, a component of executive function and semantic memory. Participants name as many animals as possible in 60 seconds. A practice pretest (naming 3 clothing items) must be passed before the timed test. Administered to ages 60+. Full codebook: <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CFQ_H.htm">CFQ_H</a>.</p>
+<table>
+<colgroup>
+<col style="width: 43%" />
+<col style="width: 56%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>CFDAST</code></td>
+<td>Animal Fluency total score: number of unique, valid animal names produced in 60 seconds (range 3-39 in this sample). Scores below 12-14 may indicate cognitive impairment depending on education and language. Mean=16.4, SD=5.6. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CFQ_H.htm">CFQ_H</a></td>
+</tr>
+<tr class="even">
+<td><code>CFDAPP</code></td>
+<td>Animal Fluency practice pretest result: 1=Passed (named 3+ clothing items), 2=Failed, 3=Not done. Participants who failed were not given the timed test. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CFQ_H.htm">CFQ_H</a></td>
+</tr>
+<tr class="odd">
+<td><code>CFDARNC</code></td>
+<td>Animal Fluency reason not done: 1=Did not consent to audio record, 2=Communication problem, 5=Refused, 6=Equipment failure. NaN if test was completed. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CFQ_H.htm">CFQ_H</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="cognitive-functioning-digit-symbol-substitution-test-dsst">Cognitive Functioning: Digit Symbol Substitution Test (DSST)</h2>
+<p>The DSST is a paper-and-pencil test from the Wechsler Adult Intelligence Scale (WAIS-III) measuring processing speed, sustained attention, and working memory. Participants are given a key pairing digits (1-9) with unique symbols. They then fill in the corresponding symbol for each digit in 133 boxes, working as quickly as possible for 120 seconds. A practice pretest of 9 items must be completed correctly first. Administered to ages 60+. Full codebook: <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CFQ_H.htm">CFQ_H</a>.</p>
+<table>
+<colgroup>
+<col style="width: 43%" />
+<col style="width: 56%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>CFDDS</code></td>
+<td>Digit Symbol Substitution Test score: number of correct symbol-digit matches in 120 seconds (range 0-105 in this sample, max possible 133). Sensitive to cognitive slowing and attention deficits. Mean=46.0, SD=17.2. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CFQ_H.htm">CFQ_H</a></td>
+</tr>
+<tr class="even">
+<td><code>CFDDPP</code></td>
+<td>Digit Symbol practice pretest result: 1=Passed, 2=Failed, 3=Not done. Participants who failed the 9-item practice were not administered the timed test. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CFQ_H.htm">CFQ_H</a></td>
+</tr>
+<tr class="odd">
+<td><code>CFDDRNC</code></td>
+<td>Digit Symbol reason not done: 2=Communication problem, 3=Physical limitation, 5=Refused, 6=Equipment failure. NaN if test was completed. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CFQ_H.htm">CFQ_H</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="cognitive-functioning-overall-status">Cognitive Functioning: Overall Status</h2>
+<table>
+<colgroup>
+<col style="width: 43%" />
+<col style="width: 56%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>CFASTAT</code></td>
+<td>Overall cognitive functioning exam status: 1=Completed all 3 tests (n=1,638), 2=Completed 2 tests (n=44), 3=Completed 1 test (n=4), 4=Ineligible due to proxy interview (n=19), 5=Ineligible due to non-English/Spanish/Asian language (n=16), 6=No tests done (n=64). <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CFQ_H.htm">CFQ_H</a></td>
+</tr>
+<tr class="even">
+<td><code>CFALANG</code></td>
+<td>Language in which cognitive tests were administered: 1=English (n=1,488), 2=Spanish (n=167), 3=Asian language (n=31). Important covariate since language may affect verbal test performance. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/CFQ_H.htm">CFQ_H</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="demographics">Demographics</h2>
+<p>Demographic variables from the NHANES 2013-2014 interview. Full codebook: <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/DEMO_H.htm">DEMO_H</a>.</p>
+<table>
+<colgroup>
+<col style="width: 43%" />
+<col style="width: 56%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>RIDAGEYR</code></td>
+<td>Age in years at time of screening. Topcoded at 80 (i.e., all participants aged 80+ are recorded as 80) to protect confidentiality. Range in this dataset: 60-80. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/DEMO_H.htm">DEMO_H</a></td>
+</tr>
+<tr class="even">
+<td><code>RIAGENDR</code></td>
+<td>Gender: 1=Male, 2=Female. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/DEMO_H.htm">DEMO_H</a></td>
+</tr>
+<tr class="odd">
+<td><code>RIDRETH3</code></td>
+<td>Race/Hispanic origin with Non-Hispanic Asian category: 1=Mexican American, 2=Other Hispanic, 3=Non-Hispanic White, 4=Non-Hispanic Black, 6=Non-Hispanic Asian, 7=Other/Multi-Racial. Note: code 5 is not used. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/DEMO_H.htm">DEMO_H</a></td>
+</tr>
+<tr class="even">
+<td><code>DMDEDUC2</code></td>
+<td>Education level for adults 20+: 1=Less than 9th grade, 2=9-11th grade (no diploma), 3=High school graduate/GED, 4=Some college or AA degree, 5=College graduate or above. Codes 7=Refused, 9=Don’t know. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/DEMO_H.htm">DEMO_H</a></td>
+</tr>
+<tr class="odd">
+<td><code>INDFMPIR</code></td>
+<td>Ratio of family income to the federal poverty level. Continuous, range 0-5. Values at 5.00 represent income &gt;= 5x the poverty threshold (topcoded). Missing for ~8% of participants. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/DEMO_H.htm">DEMO_H</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="survey-design-variables">Survey Design Variables</h2>
+<p>NHANES uses a complex, multistage probability sampling design. These variables are required for producing nationally representative estimates with correct standard errors. Use with survey analysis packages (e.g., Python <code>statsmodels</code>, R <code>survey</code>). Full codebook: <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/DEMO_H.htm">DEMO_H</a>. Tutorial: <a href="https://wwwn.cdc.gov/nchs/nhanes/tutorials/default.aspx">NHANES Survey Design</a>.</p>
+<table>
+<colgroup>
+<col style="width: 43%" />
+<col style="width: 56%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>WTMEC2YR</code></td>
+<td>Full-sample 2-year MEC examination weight. Accounts for differential probability of selection, non-response, and post-stratification to Census population totals. Required for any analysis producing population-level prevalence or mean estimates. Value of 0 indicates participant was not MEC-examined. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/DEMO_H.htm">DEMO_H</a></td>
+</tr>
+<tr class="even">
+<td><code>SDMVPSU</code></td>
+<td>Masked variance pseudo-PSU (Primary Sampling Unit). Values 1 or 2. Used with <code>SDMVSTRA</code> to compute design-corrected standard errors via Taylor series linearization. Must be specified in survey design functions. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/DEMO_H.htm">DEMO_H</a></td>
+</tr>
+<tr class="odd">
+<td><code>SDMVSTRA</code></td>
+<td>Masked variance pseudo-stratum. Values 104-118. Defines the variance strata for the survey design. Paired with <code>SDMVPSU</code> for variance estimation. <a href="https://wwwn.cdc.gov/Nchs/Data/Nhanes/Public/2013/DataFiles/DEMO_H.htm">DEMO_H</a></td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>
