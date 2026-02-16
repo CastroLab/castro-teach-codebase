@@ -1,0 +1,5 @@
+py-feat
+pandas
+numpy
+requests
+tqdm
