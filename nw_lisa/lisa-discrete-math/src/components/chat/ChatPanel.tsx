@@ -84,12 +84,17 @@ export function ChatPanel() {
                 if (data === '[DONE]') continue
                 try {
                   const parsed = JSON.parse(data)
+                  if (parsed.error) {
+                    throw new Error(parsed.error)
+                  }
                   if (parsed.text) {
                     accumulated += parsed.text
                     setStreamingContent(accumulated)
                   }
-                } catch {
-                  // skip non-JSON lines
+                } catch (e) {
+                  if (e instanceof Error && e.message !== 'Unexpected end of JSON input') {
+                    throw e
+                  }
                 }
               }
             }

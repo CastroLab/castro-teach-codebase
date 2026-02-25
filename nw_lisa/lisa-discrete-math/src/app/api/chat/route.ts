@@ -55,8 +55,10 @@ export async function POST(req: NextRequest) {
           controller.enqueue(encoder.encode('data: [DONE]\n\n'))
           controller.close()
         } catch (error) {
+          const errMsg = error instanceof Error ? error.message : 'Unknown stream error'
+          console.error('Chat stream error:', errMsg)
           controller.enqueue(
-            encoder.encode(`data: ${JSON.stringify({ error: 'Stream error' })}\n\n`)
+            encoder.encode(`data: ${JSON.stringify({ error: errMsg })}\n\n`)
           )
           controller.close()
         }
