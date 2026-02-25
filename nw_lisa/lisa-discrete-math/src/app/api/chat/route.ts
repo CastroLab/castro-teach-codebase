@@ -6,7 +6,7 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
 })
 
-const CHAT_MODEL = 'claude-sonnet-4-6'
+const CHAT_MODEL = 'claude-haiku-4-5-20251001'
 
 export async function POST(req: NextRequest) {
   try {
