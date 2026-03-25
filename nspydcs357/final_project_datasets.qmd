@@ -1,0 +1,470 @@
+---
+title: "Final Project Datasets"
+subtitle: "DCS/NRSC/PSYC 357 · Computational Neuroscience"
+author: "Jason Castro"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    theme: cosmo
+    code-fold: true
+    code-tools: true
+    fig-align: center
+    mainfont: "Palatino, serif"
+    fontsize: "1.05em"
+    linestretch: 1.4
+jupyter: python3
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{python}
+#| echo: false
+#| output: false
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.rcParams['figure.dpi'] = 130
+matplotlib.rcParams['font.size'] = 9
+matplotlib.rcParams['axes.titlesize'] = 11
+matplotlib.rcParams['axes.labelsize'] = 9
+import warnings
+warnings.filterwarnings('ignore')
+```
+
+Each project team will select one of the datasets below and write an abridged mock grant proposal. Your proposal will include an **introduction** situating the dataset in the field, a **preliminary analysis** section with exploratory analysis, one supervised task, and one unsupervised task, and a **next steps** section describing future directions. This document previews each dataset and the kinds of questions it supports.
+
+Reduced CSVs and exploratory notebooks are provided for every dataset.
+
+---
+
+## 1. Parkinson's Telemonitoring {.unnumbered}
+
+::: {.callout-note appearance="minimal"}
+**Regression · Feature selection · 42 patients · 16 voice biomarkers**
+:::
+
+Parkinson's disease severity is scored clinically via the UPDRS scale — an in-person neurological exam. Tsanas et al. (2010) demonstrated that voice recordings, capturing acoustic biomarkers like jitter, shimmer, and harmonic-to-noise ratio, can predict UPDRS scores from home. The dataset contains 5,875 telemonitoring recordings from 42 early-stage PD patients, each with 16 voice features and two continuous targets: `motor_UPDRS` and `total_UPDRS`.
+
+**The question:** Can we predict disease severity from voice alone? Which acoustic features carry the most diagnostic information, and how redundant is the feature set?
+
+```{python}
+#| label: fig-parkinsons
+#| fig-cap: "**Left:** Correlation structure among voice biomarkers and UPDRS targets — note the block structure indicating groups of redundant features. **Right:** The two most correlated voice features plotted against total UPDRS."
+import seaborn as sns
+
+df = pd.read_csv('data/parkinsons/parkinsons_updrs.data')
+voice_cols = [c for c in df.columns if c not in ['subject#', 'age', 'sex', 'test_time', 'motor_UPDRS', 'total_UPDRS']]
+corr_total = df[voice_cols].corrwith(df['total_UPDRS']).abs().nlargest(2)
+
+fig = plt.figure(figsize=(9, 3))
+ax1 = fig.add_subplot(131)
+corr = df[voice_cols + ['motor_UPDRS', 'total_UPDRS']].corr()
+sns.heatmap(corr, cmap='RdBu_r', center=0, vmin=-1, vmax=1, ax=ax1,
+            xticklabels=True, yticklabels=True, linewidths=0.3, square=True)
+ax1.tick_params(labelsize=4)
+
+for idx, (feat, gs) in enumerate(zip(corr_total.index, [132, 133])):
+    ax = fig.add_subplot(gs)
+    ax.scatter(df[feat], df['total_UPDRS'], alpha=0.06, s=3, color='steelblue')
+    r = df[feat].corr(df['total_UPDRS'])
+    ax.set_xlabel(feat, fontsize=8)
+    ax.set_ylabel('total_UPDRS' if idx == 0 else '', fontsize=8)
+    ax.set_title(f'r = {r:.3f}', fontsize=9)
+
+plt.tight_layout()
+plt.show()
+```
+
+---
+
+## 2. Steinmetz — Visual Decision-Making {.unnumbered}
+
+::: {.callout-note appearance="minimal"}
+**Classification · Regression · Dimensionality reduction · Neuropixels recordings**
+:::
+
+Steinmetz et al. (2019, *Nature*) used Neuropixels probes to record from hundreds of neurons across multiple brain regions while mice performed a visual discrimination task: see gratings on two screens, turn a wheel toward the higher-contrast side. The data includes a spike-rate tensor (neurons $\times$ time bins $\times$ trials) plus trial-by-trial behavioral variables — contrasts, choices, and outcomes.
+
+**The question:** Can we decode the animal's choice from population neural activity? How do neural population dynamics differ on correct vs. error trials?
+
+```{python}
+#| label: fig-steinmetz
+#| fig-cap: "**Left:** Firing rate heatmap for a single correct trial — neurons sorted by peak response time, revealing a sequential activation pattern. **Right:** Trial-averaged PSTHs for five example neurons with diverse temporal profiles."
+data = np.load('data/steinmetz_session11.npz', allow_pickle=True)
+spks, feedback = data['spks'], data['feedback_type']
+contrast_left, contrast_right = data['contrast_left'], data['contrast_right']
+n_neurons, n_time, n_trials = spks.shape
+
+good = np.where((feedback == 1) & (np.abs(contrast_right - contrast_left) > 0.3))[0]
+trial_idx = good[0] if len(good) > 0 else 0
+trial_data = spks[:, :, trial_idx]
+sort_idx = np.argsort(np.argmax(trial_data, axis=1))
+mean_rates = spks.mean(axis=2)
+select = np.random.RandomState(42).choice(n_neurons, 5, replace=False)
+
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(9, 2.8))
+im = ax1.imshow(trial_data[sort_idx], aspect='auto', cmap='inferno',
+                vmin=0, vmax=np.percentile(trial_data, 95))
+ax1.set_ylabel('Neurons (by peak time)')
+ax1.set_xlabel('Time bin')
+ax1.set_title(f'Correct trial · ΔC = {contrast_right[trial_idx]-contrast_left[trial_idx]:.1f}')
+plt.colorbar(im, ax=ax1, label='spk/s', shrink=0.8)
+
+for ni in select:
+    ax2.plot(mean_rates[ni], linewidth=1.2, label=f'N{ni}')
+ax2.set_xlabel('Time bin')
+ax2.set_ylabel('Firing rate (spk/s)')
+ax2.set_title('Trial-averaged PSTHs')
+ax2.legend(fontsize=7)
+plt.tight_layout()
+plt.show()
+```
+
+---
+
+## 3. Haxby fMRI — Neural Decoding {.unnumbered}
+
+::: {.callout-note appearance="minimal"}
+**Classification · Dimensionality reduction · The classic "mind-reading" dataset**
+:::
+
+Haxby et al. (2001, *Science*) showed that distributed fMRI patterns in ventral temporal cortex carry enough information to decode which of 8 object categories a person is viewing — even for categories that activate similar overall regions. One subject viewed faces, houses, cats, bottles, scissors, shoes, chairs, and scrambled images across 12 runs. A ventral temporal mask extracts ~600 task-relevant voxels from the ~40,000 recorded.
+
+**The question:** Can we decode object category from brain patterns? Which categories have the most similar — or distinct — neural representations?
+
+```{python}
+#| label: fig-haxby
+#| fig-cap: "**Left:** Mean functional image (axial slice) showing the field of view. **Right:** PCA of ventral temporal voxel patterns colored by stimulus category — faces, houses, and other categories occupy distinct regions of neural space."
+#| fig-width: 7.5
+import io, sys, os
+from nilearn import datasets, image
+from nilearn.maskers import NiftiMasker
+from sklearn.decomposition import PCA
+
+# Suppress nilearn fetch messages
+_devnull = open(os.devnull, 'w')
+_old_stdout = sys.stdout
+sys.stdout = _devnull
+haxby = datasets.fetch_haxby(data_dir='data/haxby/', subjects=1)
+sys.stdout = _old_stdout
+labels = pd.read_csv(haxby.session_target[0], sep=' ')
+fmri_img = image.load_img(haxby.func[0])
+
+masker = NiftiMasker(mask_img=haxby.mask_vt[0], standardize=True)
+X = masker.fit_transform(fmri_img)
+category = np.array(labels['labels'].values)
+non_rest = category != 'rest'
+pca = PCA(n_components=2)
+X_pca = pca.fit_transform(X[non_rest])
+y_task = category[non_rest]
+
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(9, 3))
+
+mean_func = image.mean_img(fmri_img)
+data_vol = mean_func.get_fdata()
+ax1.imshow(data_vol[:, :, data_vol.shape[2]//2].T, cmap='gray', origin='lower', aspect='equal')
+ax1.set_title('Mean functional image (axial)')
+ax1.axis('off')
+
+for i, cat in enumerate(np.unique(y_task)):
+    mask = y_task == cat
+    ax2.scatter(X_pca[mask, 0], X_pca[mask, 1], alpha=0.5, s=15, label=cat,
+                color=plt.cm.tab10(i / 8))
+ax2.set_xlabel(f'PC1 ({pca.explained_variance_ratio_[0]:.0%})')
+ax2.set_ylabel(f'PC2 ({pca.explained_variance_ratio_[1]:.0%})')
+ax2.set_title('VT cortex — PCA by category')
+ax2.legend(fontsize=6, ncol=2, loc='best')
+plt.tight_layout()
+plt.show()
+```
+
+---
+
+## 4. Brain Tumor MRI {.unnumbered}
+
+::: {.callout-note appearance="minimal"}
+**Image classification · Dimensionality reduction · ~7,200 MRI scans · 4 classes**
+:::
+
+Brain tumors are among the most serious neurological conditions. This dataset contains approximately 7,200 brain MRI scans across four classes: **glioma** (aggressive primary tumor), **meningioma** (typically benign, arising from meninges), **pituitary tumor**, and **no tumor**. Each image is a single axial slice in grayscale. This is the only project involving raw image data — students can work with extracted features or attempt convolutional approaches.
+
+**The question:** Can we classify tumor type from MRI? What pixel-level or structural features distinguish the classes?
+
+```{python}
+#| label: fig-tumor
+#| fig-cap: "Example MRI scans from each class. Columns correspond to tumor types; rows show different patients. Differences in tumor location, size, and contrast pattern are visible even to the untrained eye."
+from pathlib import Path
+from PIL import Image
+
+base = Path('data/brain_tumor_mri')
+classes = sorted([d.name for d in (base / 'Training').iterdir() if d.is_dir()])
+
+fig, axes = plt.subplots(2, 4, figsize=(9, 4.5))
+for row in range(2):
+    for col, cls in enumerate(classes):
+        imgs = sorted((base / 'Training' / cls).glob('*.jpg'))
+        img = Image.open(imgs[row * 11])
+        axes[row, col].imshow(img, cmap='gray')
+        if row == 0:
+            axes[row, col].set_title(cls, fontsize=10, fontweight='bold')
+        axes[row, col].axis('off')
+plt.tight_layout()
+plt.show()
+```
+
+---
+
+## 5. EEG — Alcoholism Study {.unnumbered}
+
+::: {.callout-note appearance="minimal"}
+**Classification · Feature engineering · 64-channel EEG · 122 subjects**
+:::
+
+Zhang et al. (1995) recorded 64-channel EEG from 122 subjects — half diagnosed with chronic alcoholism, half matched controls — while they viewed visual stimuli. Each trial is one second at 256 Hz. The P300 component, a positive deflection ~300 ms post-stimulus, is characteristically reduced in alcoholism — one of the most replicated findings in psychiatric EEG. This dataset teaches the critical skill of engineering features from raw time series.
+
+**The question:** Can we distinguish alcoholic from control subjects using EEG response features? Which spectral or temporal features carry the most discriminative information?
+
+```{python}
+#| label: fig-eeg
+#| fig-cap: "**Left:** Full 64-channel EEG heatmap for a single trial (alcoholic subject) — rows are electrodes, columns are time samples. **Right:** Signal variability by group — alcoholic subjects show subtly different voltage dynamics."
+import gzip, glob, os, tarfile
+
+eeg_base = 'data/eeg_alcoholism/smni_eeg_data'
+for tgz in glob.glob(f'{eeg_base}/*.tar.gz'):
+    if not os.path.isdir(tgz.replace('.tar.gz', '')):
+        with tarfile.open(tgz, 'r:gz') as tar:
+            tar.extractall(eeg_base)
+
+def parse_eeg_gz(filepath):
+    channels = {}
+    with gzip.open(filepath, 'rt') as f:
+        for line in f:
+            line = line.strip()
+            if line.startswith('#') or not line: continue
+            parts = line.split()
+            if len(parts) == 4:
+                channels.setdefault(parts[1], []).append(float(parts[3]))
+    ch_names = list(channels.keys())
+    return ch_names, np.array([channels[ch] for ch in ch_names])
+
+gz_files = sorted(glob.glob(f'{eeg_base}/a_*/*.gz'))
+ch_names, trial_data = parse_eeg_gz(gz_files[0])
+
+groups = {'alcoholic': [], 'control': []}
+for subdir in sorted(glob.glob(f'{eeg_base}/[ac]_*')):
+    if not os.path.isdir(subdir): continue
+    group = 'alcoholic' if '/a_' in subdir else 'control'
+    for gz in sorted(glob.glob(f'{subdir}/*.gz'))[:20]:
+        try:
+            _, d = parse_eeg_gz(gz)
+            groups[group].append({'std': d.std(axis=1).mean(),
+                                  'range': (d.max(axis=1)-d.min(axis=1)).mean()})
+        except: pass
+
+fig = plt.figure(figsize=(9, 2.8))
+ax1 = fig.add_subplot(131)
+im = ax1.imshow(trial_data, aspect='auto', cmap='RdBu_r', vmin=-30, vmax=30)
+ax1.set_xlabel('Sample (256 Hz)')
+ax1.set_ylabel('Channel')
+ax1.set_title('Single-trial EEG (alcoholic)')
+plt.colorbar(im, ax=ax1, label='µV', shrink=0.8)
+
+for i, (feat, gs) in enumerate(zip(['std', 'range'], [132, 133])):
+    ax = fig.add_subplot(gs)
+    vals = {g: [t[feat] for t in ts] for g, ts in groups.items()}
+    bp = ax.boxplot([vals['control'], vals['alcoholic']],
+                    patch_artist=True, widths=0.5)
+    bp['boxes'][0].set_facecolor('steelblue')
+    bp['boxes'][1].set_facecolor('coral')
+    ax.set_xticklabels(['Ctrl', 'Alc'], fontsize=8)
+    ax.set_title(f'Channel {feat}', fontsize=9)
+    ax.set_ylabel('µV')
+plt.tight_layout()
+plt.show()
+```
+
+---
+
+## 6. Stringer — 10,000 Neurons in V1 {.unnumbered}
+
+::: {.callout-note appearance="minimal"}
+**Dimensionality reduction · Regression · 10,164 simultaneous neurons**
+:::
+
+Stringer et al. (2019, *Science*) used two-photon calcium imaging to record from 10,164 neurons simultaneously in mouse V1 during spontaneous behavior — no visual stimuli presented. The key finding: PCA on the population reveals that the dominant dimensions of neural variance correlate with running speed and pupil dilation, not vision. Behavioral state dominates cortical population activity even in a "visual" area.
+
+**The question:** What is the intrinsic dimensionality of population activity? Can we predict behavioral state from neural data — and which neurons contribute most?
+
+```{python}
+#| label: fig-stringer
+#| fig-cap: "Population activity during a running bout. Neurons are sorted by their correlation with running speed (positively tuned at top). The cyan trace shows running speed. A coordinated wave of activation sweeps through the population at running onset — the signature of behavioral state modulating V1."
+import scipy.io
+from scipy.ndimage import uniform_filter1d
+
+data = scipy.io.loadmat('data/stringer/spont_M161025_MP030_2016-11-20.mat',
+                         squeeze_me=True, struct_as_record=False)
+Fsp = data['Fsp']
+run_speed = np.array(data['beh'].runSpeed).flatten()
+
+corrs = np.array([np.corrcoef(Fsp[i, :], run_speed)[0,1] for i in range(Fsp.shape[0])])
+sort_idx = np.argsort(corrs)
+
+run_smooth = uniform_filter1d(run_speed, size=50)
+good_starts = np.where((run_smooth[1:] > 3) & (run_smooth[:-1] < 1))[0]
+t0 = max(0, good_starts[0] - 300) if len(good_starts) > 0 else 0
+t1 = t0 + 2500
+
+neuron_sub = sort_idx[::20]
+Fw = Fsp[neuron_sub, t0:t1].astype(float)
+for j in range(Fw.shape[0]):
+    mu, sd = Fw[j].mean(), Fw[j].std()
+    if sd > 0: Fw[j] = (Fw[j] - mu) / sd
+
+fig, axes = plt.subplots(2, 1, figsize=(10, 5), gridspec_kw={'height_ratios': [4, 1]}, sharex=True)
+im = axes[0].imshow(Fw, aspect='auto', cmap='inferno', vmin=-0.5, vmax=3, interpolation='none')
+axes[0].set_ylabel('Neurons (sorted by run corr.)')
+plt.colorbar(im, ax=axes[0], label='z-score', shrink=0.7)
+axes[1].fill_between(range(t1-t0), run_speed[t0:t1], color='cyan', alpha=0.8)
+axes[1].set_ylabel('Run speed')
+axes[1].set_xlabel('Frame')
+axes[1].set_xlim(0, t1-t0)
+plt.tight_layout()
+plt.show()
+```
+
+---
+
+## 7. Motor Imagery EEG (BCI) {.unnumbered}
+
+::: {.callout-note appearance="minimal"}
+**Classification · Spectral analysis · 64-channel EEG · Brain-computer interface**
+:::
+
+The PhysioNet EEGMMIDB dataset contains 64-channel EEG from over 100 subjects performing motor execution (actually moving fists or feet) and motor imagery (imagining the same movements). During movement, the mu rhythm (8–13 Hz) suppresses over motor cortex — the fundamental signal exploited by brain-computer interfaces. Each subject completed baseline, execution, and imagery runs.
+
+**The question:** Can we decode which movement a person is performing or imagining from scalp EEG? Where and when does the mu rhythm suppress?
+
+```{python}
+#| label: fig-motor
+#| fig-cap: "Scalp voltage topography at four timepoints for three event types (T0 = rest, T1 = left fist, T2 = right fist/feet). Spatial voltage distributions evolve differently across conditions, reflecting distinct motor cortex activation patterns."
+import mne
+
+raw_topo = mne.io.read_raw_edf('data/eeg_motor_imagery/S001/S001R03.edf',
+                                preload=True, verbose=False)
+
+rename = {}
+for ch in raw_topo.ch_names:
+    clean = ch.rstrip('.')
+    if len(clean) > 2 and clean[1].islower() and clean[0].isupper():
+        clean = clean.upper()
+    if clean.endswith('Z') and len(clean) > 2:
+        clean = clean[:-1] + 'z'
+    if clean.startswith('FP'):
+        clean = 'Fp' + clean[2:]
+    rename[ch] = clean
+
+raw_topo.rename_channels(rename)
+raw_topo.set_montage(mne.channels.make_standard_montage('standard_1005'),
+                     on_missing='ignore')
+
+events_t, edict_t = mne.events_from_annotations(raw_topo, verbose=False)
+epochs_t = mne.Epochs(raw_topo, events_t, event_id=edict_t, tmin=-0.5, tmax=2.0,
+                      baseline=(-0.5, 0), preload=True, verbose=False)
+
+conditions = list(edict_t.keys())
+times = [0.0, 0.5, 1.0, 1.5]
+
+fig, axes = plt.subplots(len(conditions), len(times),
+                         figsize=(8, 1.8*len(conditions)))
+if len(conditions) == 1: axes = axes[np.newaxis, :]
+
+for row, cond in enumerate(conditions):
+    evoked = epochs_t[cond].average()
+    for col, t in enumerate(times):
+        mne.viz.plot_topomap(evoked.copy().crop(t, t).data[:, 0], evoked.info,
+                            axes=axes[row, col], show=False, cmap='RdBu_r')
+        axes[row, col].set_title(f'{cond} · {t}s', fontsize=9)
+
+plt.tight_layout()
+plt.show()
+```
+
+---
+
+## 8. ABIDE — Autism Brain Connectivity {.unnumbered}
+
+::: {.callout-note appearance="minimal"}
+**Classification · Regression · Clustering · 1,100+ subjects · Resting-state fMRI**
+:::
+
+The Autism Brain Imaging Data Exchange (Di Martino et al., 2014) aggregated resting-state fMRI from over 1,100 subjects — roughly half diagnosed with ASD, half neurotypical controls — across 17 international sites. For each subject, the brain is parcellated into cortical regions and pairwise functional connectivity (temporal correlation) is computed, yielding a symmetric connectivity matrix. Rich phenotypic data includes diagnosis, age, sex, and IQ subscores.
+
+**The question:** Can we classify ASD vs. control from brain connectivity patterns? What connectivity features predict cognitive measures like IQ?
+
+```{python}
+#| label: fig-abide
+#| fig-cap: "**Left:** Group-average functional connectome — lines show the strongest pairwise correlations between cortical regions, plotted on a glass brain. **Right:** Mean connectivity matrix (48 Harvard-Oxford regions). Block structure reflects functional networks."
+#| fig-width: 7.5
+import io, sys, os
+from nilearn import datasets as ni_datasets, plotting
+from nilearn.maskers import NiftiLabelsMasker
+from nilearn.connectome import ConnectivityMeasure
+
+_devnull = open(os.devnull, 'w')
+_old_stdout = sys.stdout
+sys.stdout = _devnull
+atlas = ni_datasets.fetch_atlas_harvard_oxford('cort-maxprob-thr25-2mm')
+sys.stdout = _old_stdout
+masker = NiftiLabelsMasker(labels_img=atlas.maps, standardize=True)
+
+func_files = sorted(glob.glob('data/abide/ABIDE_pcp/cpac/filt_global/*.nii.gz'))
+connectivities = []
+for fpath in func_files[:15]:
+    try:
+        ts = masker.fit_transform(fpath)
+        conn = ConnectivityMeasure(kind='correlation')
+        connectivities.append(conn.fit_transform([ts])[0])
+    except: pass
+
+coords = plotting.find_parcellation_cut_coords(atlas.maps)
+mean_mat = np.mean(connectivities, axis=0)
+threshold = np.percentile(np.abs(mean_mat), 96)
+
+fig = plt.figure(figsize=(9, 3))
+ax1 = fig.add_subplot(121)
+plotting.plot_connectome(mean_mat, coords, edge_threshold=threshold,
+                        axes=ax1, node_size=12, colorbar=False,
+                        title='Group-average connectome')
+
+ax2 = fig.add_subplot(122)
+im = ax2.imshow(mean_mat, cmap='RdBu_r', vmin=-0.4, vmax=0.4, aspect='equal')
+ax2.set_xlabel('Brain region')
+ax2.set_ylabel('Brain region')
+ax2.set_title('Mean connectivity (48 regions)')
+plt.colorbar(im, ax=ax2, label='r', shrink=0.8)
+plt.tight_layout()
+plt.show()
+```
+
+---
+
+## Choosing Your Project {.unnumbered}
+
+| Dataset | Supervised | Unsupervised | Special | Key skill |
+|:--------|:----------|:------------|:--------|:----------|
+| Parkinson's | Regression | Clustering | — | Feature selection |
+| Steinmetz | Classification | Dim. reduction | — | Neural population decoding |
+| Haxby fMRI | Classification | Dim. reduction | — | Cross-validation design |
+| Brain Tumor MRI | Classification | Clustering | Images | Image feature engineering |
+| EEG Alcoholism | Classification | Dim. reduction | — | Time-series features |
+| Stringer 10K | Regression | Dim. reduction | — | High-dimensional analysis |
+| Motor Imagery | Classification | Spectral analysis | — | Signal processing |
+| ABIDE | Classification | Clustering | — | Connectivity analysis |
+
+: {.striped .hover}
+
+All datasets include a **reduced CSV** for immediate access and the **full raw data** for students who want to go deeper. Exploratory notebooks with worked examples are provided for each.
