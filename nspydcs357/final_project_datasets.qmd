@@ -194,6 +194,10 @@ Brain tumors are among the most serious neurological conditions. This dataset co
 
 **The question:** Can we classify tumor type from MRI? What pixel-level or structural features distinguish the classes?
 
+::: {.callout-warning}
+**Note:** This project is only recommended for people who either have some prior experience with image analysis, or who are **extremely motivated** and willing to put in some **major time/self-study**.
+:::
+
 ```{python}
 #| label: fig-tumor
 #| fig-cap: "Example MRI scans from each class. Columns correspond to tumor types; rows show different patients. Differences in tumor location, size, and contrast pattern are visible even to the untrained eye."
